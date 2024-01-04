@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    String cityName = "Katowice"; //city name
+    String cityName = "Santa Cruz"; //city name
     int currTemp = 30; // current temperature
     int maxTemp = 30; // today max temperature
     int minTemp = 2; // today min temperature
