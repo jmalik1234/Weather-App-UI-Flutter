@@ -4,6 +4,8 @@ from firebase_admin import firestore
 import weather_api 
 import firebase_admin
 from firebase_admin import credentials
+from flask import Flask, request, jsonify
+
 
 cred = credentials.Certificate("/Users/rishikasrinivas/Documents/Rishika/UCSC/Projects/Weather-App-UI-Flutter/weatherapp-6d528-firebase-adminsdk-4adbr-bab2f67e6d.json")
 firebase_admin.initialize_app(cred)

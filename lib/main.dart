@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/home.dart';
 import 'package:weather_app/screens/home_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +22,7 @@ class _AppState extends State<App> {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Weather App',
-      home: HomePage(),
+      home: HomePage2(),
     );
   }
 }
