@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage2> {
       //change to this for sending to local host first:
 
       String api = 'http://127.0.0.1:5000/weather_post';
-      //read from our 
+      //read from our
       final resp = await http.post(Uri.parse(api),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({'city': 'Cupertino', 'country': 'USA'}));
@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage2> {
       return [];
     }
   }
+
   Future<List> callWeatherAPI() async {
     try {
       String api_key = "cad31c7091c048b1ae88e949b5167636";
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage2> {
         return [];
       }
     } catch (e) {
-      return e;
+      return [];
     }
   }
 

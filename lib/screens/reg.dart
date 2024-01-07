@@ -65,16 +65,11 @@ class _RegPage extends State<RegPage> {
             Text('already a member?'),
             SizedBox(width: 4),
             GestureDetector(
-              onTap: widget.onTap,
-              child: Text(
-                'Sign in now',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onSaved: (inputEmail, inputPassword) {
-                email = inputEmail;
-                password = inputPassword
-              },
-            ),
+                onTap: widget.onTap,
+                child: Text(
+                  'Sign in now',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
           ])
         ],
       ),
