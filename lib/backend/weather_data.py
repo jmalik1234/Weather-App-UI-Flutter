@@ -7,10 +7,10 @@ app = Flask(__name__)
 weather = {}
 @app.route('/weather_post', methods=['POST'])
 def get_weather_data():
-    data = request.json
-    city = data['city']
+    #data = request.json
+    city = 'Cupertino' #data['city'] = 
    
-    country = data['country']
+    country =  'USA' #data['country'] =
     url = f'http://api.weatherbit.io/v2.0/current?city={city}&country={country}=US&key={api_key}&include=minutely'
 
    
@@ -20,7 +20,7 @@ def get_weather_data():
     if response.status_code == 200:
         data = response.json()
         weather['latest'] = data
-        return jsonify(data)
+        return weather['latest'] #jsonify(data)
     else:
         print(response.status_code)  
 

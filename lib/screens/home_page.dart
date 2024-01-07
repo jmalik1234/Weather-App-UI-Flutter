@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  //pull from db to show searches (city names)
   @override
   Widget build(BuildContext context) {
     String cityName = "Santa Cruz"; //city name

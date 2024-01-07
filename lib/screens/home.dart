@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:weather_app/services/auth/auth_services.dart';
 
 class HomePage2 extends StatefulWidget {
   const HomePage2({Key? key}) : super(key: key);
@@ -13,7 +17,36 @@ class HomePage2 extends StatefulWidget {
 //version in github does the extra stwep of saving to local host api
 
 class _HomePageState extends State<HomePage2> {
-  Future<List> callPython() async {
+  //if u clikc + it displays cupertino min max temp etc
+  final FirebaseAuth iofauth = FirebaseAuth.instance;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  void signOut() {
+    iofauth.signOut();
+  }
+
+  Future<List> callPythonAPI() async {
+    try {
+      String api_key = "cad31c7091c048b1ae88e949b5167636";
+      String city = 'Cupertino';
+      String country = 'USA';
+      //change to this for sending to local host first:
+
+      String api = 'http://127.0.0.1:5000/weather_post';
+      //read from our 
+      final resp = await http.post(Uri.parse(api),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'city': 'Cupertino', 'country': 'USA'}));
+      if (resp.statusCode == 200) {
+        Map<String, dynamic> result = json.decode(resp.body);
+        return [result['data'], result['minutely']];
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+  Future<List> callWeatherAPI() async {
     try {
       String api_key = "cad31c7091c048b1ae88e949b5167636";
       String city = 'Cupertino';
@@ -28,7 +61,7 @@ class _HomePageState extends State<HomePage2> {
         return [];
       }
     } catch (e) {
-      return [];
+      return e;
     }
   }
 
@@ -75,6 +108,9 @@ class _HomePageState extends State<HomePage2> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
     return Scaffold(
+      appBar: AppBar(title: Text('Home Page'), actions: [
+        IconButton(onPressed: signOut, icon: const Icon(Icons.logout)),
+      ]),
       body: Center(
         child: Container(
           height: size.height,
@@ -115,7 +151,7 @@ class _HomePageState extends State<HomePage2> {
                             IconButton(
                               icon: Icon(Icons.bookmark),
                               onPressed: () async {
-                                List weatherData = await callPython();
+                                List weatherData = await callWeatherAPI();
                                 cityName = weatherData[0][0]['city_name'];
                                 List<double> temps =
                                     collectTemps(weatherData[1]);
