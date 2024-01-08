@@ -10,30 +10,20 @@ import 'package:weather_app/services/auth/auth_services.dart';
 import 'package:weather_app/services/login_or_reg.dart';
 import 'package:weather_app/screens/login.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(ChangeNotifierProvider(
-    create: (context) => AuthService(),
-    child: const App(),
-  ));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: const App(),
+    ),
+  );
 }
 
 //will get called repeatedly
-class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  void addToDb() async {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final person = {
-      'Age': 5,
-    };
-    await _firestore.collection('tasks').doc('info').set(person);
-  }
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +31,7 @@ class _AppState extends State<App> {
 
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Weather App',
+
       //called over and over again so after you login it'll
       //call AuthGate with updated info
       home: AuthGate(),

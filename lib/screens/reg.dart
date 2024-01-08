@@ -10,6 +10,7 @@ class RegPage extends StatefulWidget {
   final void Function()? onTap;
   const RegPage({super.key, this.onTap});
 
+  @override
   State<RegPage> createState() => _RegPage();
 }
 

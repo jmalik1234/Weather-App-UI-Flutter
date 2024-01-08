@@ -25,14 +25,22 @@ class AuthService extends ChangeNotifier {
     try {
       UserCredential uc = await _auth.createUserWithEmailAndPassword(
           email: email, password: pass);
-      _firestore.collection('users').doc(uc.user!.uid).set({
+      _firestore.collection('users').add({
         'uid': uc.user!.uid,
         'email': email,
         'pass': pass,
+      }).then((DocumentReference document) {
+        print('Document added with ID: ${document.id}');
+      }).catchError((error) {
+        print('Error adding document: $error');
       });
       return uc;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
+  }
+
+  void signOut() async {
+    return await FirebaseAuth.instance.signOut();
   }
 }
