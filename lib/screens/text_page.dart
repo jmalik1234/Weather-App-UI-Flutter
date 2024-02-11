@@ -7,34 +7,35 @@ import 'package:weather_app/components/my_text_field.dart';
 
 class TextPage extends StatefulWidget {
   final String city;
-  final String country;
+  final String state;
   final void Function()? onPressed;
   const TextPage(
-      {super.key, required this.city, required this.country, this.onPressed});
+      {super.key, required this.city, required this.state, this.onPressed});
 
   @override
   State<TextPage> createState() => _Text();
 }
 
 class _Text extends State<TextPage> {
-  double maxTemp = 0.0;
-  double minTemp = 0.0;
   double currTemp = 0.0;
-  Future<List> callWeatherAPI(String city, String country) async {
+  Future<Map<String, dynamic>?>? callWeatherAPI(
+      String city, String state) async {
     try {
-      String api_key = "cad31c7091c048b1ae88e949b5167636";
+      String api_key = "818b5abb87b94f2c8464ecc5168d5a0b";
 
       String api =
-          'http://api.weatherbit.io/v2.0/current?city=${city}&country=${country}=US&key=${api_key}&include=minutely';
+          'https://api.weatherbit.io/v2.0/current?city=${city}&state=${state}&key=${api_key}&include=minutely';
       final resp = await http.get(Uri.parse(api));
       if (resp.statusCode == 200) {
         Map<String, dynamic> result = json.decode(resp.body);
-        return [result['data'], result['minutely']];
+        print("returning result\n");
+        return result;
       } else {
-        return [];
+        print("returning  ${resp.statusCode}null\n");
+        return null;
       }
     } catch (e) {
-      return [];
+      return null;
     }
   }
 
@@ -70,36 +71,78 @@ class _Text extends State<TextPage> {
     return max_v;
   }
 
-  void getWeatherInfo(String city, String country) async {
-    List weather_info = await callWeatherAPI(widget.city, widget.country);
-    List<double> temps = collectTemps(weather_info[1]);
+  Future<Map<String, dynamic>?> getWeatherInfo(
+      String city, String country) async {
+    return await callWeatherAPI(widget.city, widget.state);
+    //List<double> temps = collectTemps(weather_info[1]);
 
-    maxTemp = max_elem(temps);
-    minTemp = min_elem(temps);
-    print("in get info, $minTemp");
-    currTemp = weather_info[1][0]['temp'];
-    print(city + minTemp.toString() + currTemp.toString());
+    //maxTemp = max_elem(temps);
+    //minTemp = min_elem(temps);
+    //print("in get info, $minTemp");
+    //currTemp = weather_info[1][0]['temp'];
+    //print(city + minTemp.toString() + currTemp.toString());
   }
 
   void showRecent() {}
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     String city = widget.city;
-    String country = widget.country;
-    final title = "$city, $country";
-    print("In bild $maxTemp");
-    getWeatherInfo(widget.city, widget.country);
-    final results =
-        "city: $city\ncountry: $country\nMax Temp today:$maxTemp•C\nMin Temp today:$minTemp•C\nCur temp:$currTemp•C";
+    String state = widget.state;
+    final title = "$city, $state";
+
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Column(
-        children: [
-          Center(child: Text(results)),
-          MyButton(onTap: showRecent, text: "Get Latest Search"),
-        ],
+      appBar: AppBar(),
+      body: FutureBuilder<Map<String, dynamic>?>(
+        future: getWeatherInfo(widget.city, widget.state),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final currTemp = snapshot.data!["data"][0]['temp'];
+
+          final results = "city: $city\nstate: $state\nCur temp: $currTemp °C";
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              width: MediaQuery.of(context)
+                  .size
+                  .width, // Set the width to the screen width
+              child: Text(results),
+            ),
+          );
+        },
       ),
     );
   }
+
+  /*Widget build(BuildContext context) {
+
+    return FutureBuilder<Map<String, dynamic>?>(
+        future: getWeatherInfo(widget.city, widget.country),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // If the future is still loading, return a loading indicator
+            return Center(child: CircularProgressIndicator());
+          }
+          final Map<String, dynamic> recent = snapshot.data!;
+          print(recent[0]['temp']);
+          //${snapshot.data!['data'][0]['temp']}
+          final results =
+              "city: city\ncountry: $widget.country\nMax Temp today: \n";
+          return Scaffold(
+            appBar: AppBar(title: const Text("Weather Results", maxLines: 1)),
+            body: SingleChildScrollView(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(results)),
+            ),
+          );
+        });
+  }*/
 }

@@ -25,7 +25,7 @@ class _Searches extends State<SearchPage> {
   final FirebaseAuth iofauth = FirebaseAuth.instance;
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final cityController = TextEditingController();
-  final countryController = TextEditingController();
+  final stateController = TextEditingController();
   String? city = "";
   String? country = "";
   bool showWeather = false;
@@ -53,18 +53,17 @@ class _Searches extends State<SearchPage> {
               obscureText: false,
             ),
             MyTextField(
-              controller: countryController,
-              hintText: "country",
+              controller: stateController,
+              hintText: "state",
               obscureText: false,
             ),
             MyButton(
               onTap: () async {
-                addSearchToDB(cityController.text, countryController.text);
+                addSearchToDB(cityController.text, stateController.text);
                 //changing the UI be reassigning the fetched data to final response
                 setState(() {
                   TextPage(
-                      city: cityController.text,
-                      country: countryController.text);
+                      city: cityController.text, state: stateController.text);
                 });
               },
               text: 'Submit',
@@ -74,13 +73,13 @@ class _Searches extends State<SearchPage> {
         ));
   }
 
-  void addSearchToDB(String? city, String? country) {
+  void addSearchToDB(String? city, String? state) {
     String docName = "$city$country";
     var person = iofauth.currentUser!.uid;
     print("Current user is $person");
     db.collection("users").doc(person).collection('Searches').doc(docName).set({
       'city': city,
-      'country': country,
+      'state': state,
     });
   }
 
@@ -123,7 +122,7 @@ class _Searches extends State<SearchPage> {
             MaterialPageRoute(
               builder: (context) => TextPage(
                 city: data['city'],
-                country: data['country'],
+                state: data['state'],
               ),
             ));
       },

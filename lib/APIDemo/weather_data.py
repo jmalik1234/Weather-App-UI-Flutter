@@ -1,7 +1,7 @@
 import json
 import requests
 from flask import Flask, request, jsonify
-api_key=""
+api_key="cad31c7091c048b1ae88e949b5167636" #get your own private key
 
 #using flask to develop api to post/get to/from 
 app = Flask(__name__)

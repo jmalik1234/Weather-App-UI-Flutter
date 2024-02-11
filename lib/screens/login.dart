@@ -22,10 +22,11 @@ class _LoginState extends State<LoginPage> {
     final auth = Provider.of<AuthService>(context, listen: false);
     try {
       await auth.signInWithCreds(emailController.text, passwordController.text);
+      print("sign in ");
     } catch (e) {
       //show error msg at bottom of screen
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("sign in login + e.toString()")));
     }
   }
 

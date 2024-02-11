@@ -16,7 +16,7 @@ class AuthService extends ChangeNotifier {
       });
       return uc;
     } on FirebaseAuthException catch (e) {
-      throw Exception(e.code);
+      throw Exception("login + e.code");
     }
   }
 
